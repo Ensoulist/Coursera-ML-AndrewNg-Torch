@@ -32,7 +32,6 @@ method.plot_data(X, y, false, {"y = 1", "y = 0"},
 -- Note that mapFeature also adds a column of ones for us, so the intercept
 -- term is handled
 X = method.map_feature(X, 6)
-print(X[1])
 
 -- Initialize fitting parameters
 local initial_theta = torch.zeros(X:size(2), 1)
@@ -81,7 +80,6 @@ misc.pause()
 --
 
 for _, lambda in ipairs({0, 1, 10, 100}) do
---for _, lambda in ipairs({1}) do
     misc.printf('Running with lambda = %f\n', lambda);
 
     -- Initialize fitting parameters
@@ -91,10 +89,6 @@ for _, lambda in ipairs({0, 1, 10, 100}) do
     local config = {
         maxIter = 400,
     }
-    --local config = {
-    --    learningRate = 0.1,
-    --    momentum = 0.9,
-    --}
     local feval = function(t)
         local cost, grad = method.cost_function_reg(t, X, y, lambda)
         return cost, grad
@@ -102,12 +96,6 @@ for _, lambda in ipairs({0, 1, 10, 100}) do
     
     -- Optimize
     local theta, loss = optim.cg(feval, initial_theta, config)
-    --print(loss)
-    --local theta = initial_theta
-    --local loss
-    --for epoch = 1, 400 do
-    --    theta, loss  = optim.sgd(feval, theta, config)
-    --end
     
     -- Plot Boundary
     method.plot_decision_boundary(theta:view(theta:size(1)), X, y, false, {"y = 1", "y = 0"}, 
@@ -119,7 +107,7 @@ for _, lambda in ipairs({0, 1, 10, 100}) do
     
     misc.printf('Train Accuracy: %f\n', 
         torch.eq(p, y):double():mean() * 100);
-    misc.printf('Expected accuracy (with lambda = 1): 83.1 (approx)\n');
+    if lambda == 1 then
+        misc.printf('Expected accuracy (with lambda = 1): 83.1 (approx)\n');
+    end
 end
-
-

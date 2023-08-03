@@ -44,15 +44,76 @@ function method.plot_decision_boundary(theta, X, y, param_only,
     legend, labels, file_name)
 
     local tbl = method.plot_data(X[{{}, {2, 3}}], y, true, legend, labels, file_name)
-    local plot_x = torch.Tensor({torch.min(X[{{}, 2}]) - 2, torch.max(X[{{}, 2}]) + 2})
-    local plot_y = (theta[2] * plot_x + theta[1]) * (-1 / theta[3])
-    table_insert(tbl, {"Decision Boundary", plot_x, plot_y, "-"})
+
+    if X:size(2) <= 3 then
+        local plot_x = torch.Tensor({torch.min(X[{{}, 2}]) - 2, torch.max(X[{{}, 2}]) + 2})
+        local plot_y = (theta[2] * plot_x + theta[1]) * (-1 / theta[3])
+        table_insert(tbl, {"Decision Boundary", plot_x, plot_y, "-"})
+    else
+        local u = torch.linspace(-1, 1.5, 50)
+        local v = torch.linspace(-1, 1.5, 50)
+        local z = torch.zeros(u:size(1), v:size(1))
+        for i = 1, u:size(1), 1 do
+            for j = 1, v:size(1), 1 do
+                z[i][j] = method.map_feature(torch.Tensor({{u[i], v[j]}}), 6) * theta
+            end
+        end
+        local plot_x, plot_y = method.contour(z, u, v, 0)
+        if plot_x:dim() > 0 and plot_y:dim() > 0 then
+            table_insert(tbl, {"Decision Boundary", plot_x, plot_y, "+"})
+        end
+    end
 
     plot.pngfigure(file_name or "plot2.png")
     plot.plot(tbl)
     plot.xlabel(labels and labels[1] or "Exam 1 score")
     plot.ylabel(labels and labels[2] or "Exam 2 score")
     plot.plotflush()
+end
+
+function method.contour(data, x, y, z)
+    local rlt_x = {}
+    local rlt_y = {}
+    local last_flag 
+    for i = 1, data:size(1), 1 do
+        for j = 1, data:size(2), 1 do
+            local val = data[i][j]
+            if val == z then
+                table_insert(rlt_x, x[i])
+                table_insert(rlt_y, y[j])
+                last_flag = nil
+            else
+                if last_flag ~= nil then
+                    if val > 0 ~= last_flag then
+                        table_insert(rlt_x, x[i])
+                        table_insert(rlt_y, y[j])
+                    end
+                end
+                last_flag = val > 0
+            end
+        end
+    end
+
+    last_flag = nil
+    for j = 1, data:size(2), 1 do
+        for i = 1, data:size(1), 1 do
+            local val = data[i][j]
+            if val == z then
+                table_insert(rlt_x, x[i])
+                table_insert(rlt_y, y[j])
+                last_flag = nil
+            else
+                if last_flag ~= nil then
+                    if val > 0 ~= last_flag then
+                        table_insert(rlt_x, x[i])
+                        table_insert(rlt_y, y[j])
+                    end
+                end
+                last_flag = val > 0
+            end
+        end
+    end
+    return torch.Tensor(rlt_x), torch.Tensor(rlt_y)
 end
 
 function method.predict(theta, X)
@@ -79,7 +140,7 @@ function method.cost_function_reg(theta, X, y, lambda)
     local m = y:size(1)
     local theta2 = theta:clone()
     theta2[1] = 0
-    return cost + (torch.sum(theta2:pow(2))) * lambda / (2 * m),
+    return cost + (torch.sum(torch.pow(theta2, 2))) * lambda / (2 * m),
         grad + lambda * theta2 / m
 end
 
