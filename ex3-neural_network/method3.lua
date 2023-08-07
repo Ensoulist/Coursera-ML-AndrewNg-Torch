@@ -12,7 +12,7 @@ local math_sqrt = math.sqrt
 local method = {}
 misc.extend_method(method, "ex2-logistic_regression.method2")
 
-function method.display_data(X, example_width, skip_draw)
+function method.display_data(X, example_width, skip_draw, file_name)
     -- Set example_width automatically if not passed in
     if not example_width then
         example_width = math_floor(math_sqrt(X:size(2)))
@@ -58,10 +58,11 @@ function method.display_data(X, example_width, skip_draw)
         return display_array
     end
 
-    plot.pngfigure("display_data.png")
+    file_name = file_name or "display_data.png"
+    plot.pngfigure(file_name)
     plot.imagesc(display_array, "gray")
     plot.plotflush()
-    misc.printf("see display_data.png")
+    misc.printf("see %s", file_name)
 end
 
 function method.lr_cost_function(theta, X, y, lambda)
@@ -82,7 +83,9 @@ function method.one_vs_all(X, y, num_labels, lambda)
             local cost, grad = method.lr_cost_function(t, X, this_y, lambda)
             return cost, grad
         end
-        local theta, J = optim.cg(feval, torch.zeros(n + 1), {maxIter = 400})
+
+        misc.printf("training with lable %d", i)
+        local theta, J = optim.cg(feval, torch.zeros(n + 1), {maxIter = 50})
         thetas[i] = theta
     end
     return torch.cat(thetas, 2)
@@ -92,6 +95,20 @@ function method.predict_one_vs_all(all_theta, X)
     X = torch.cat(torch.ones(X:size(1)), X, 2)
     local pred = torch.sigmoid(X * all_theta)
     local _, rlt = torch.max(pred, 2) 
+    return rlt:double()
+end
+
+function method.predict(Theta1, Theta2, X)
+    local X_new = torch.cat(torch.ones(X:size(1)), X, 2)
+
+    local Z2 = X_new * Theta1:t()
+    local A2 = torch.sigmoid(Z2)
+
+    local A2_tmp = torch.cat(torch.ones(A2:size(1)), A2, 2)
+    local Z3 = A2_tmp * Theta2:t()
+    local A3 = torch.sigmoid(Z3)
+
+    local _, rlt = torch.max(A3, 2)
     return rlt:double()
 end
 

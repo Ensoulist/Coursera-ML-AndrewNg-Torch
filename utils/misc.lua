@@ -37,6 +37,13 @@ function misc.pause()
     io.stdin:read()
 end
 
+function misc.input(_hint)
+    if _hint then
+        print(_hint)
+    end
+    return io.stdin:read()
+end
+
 function misc.extend_method(_method, _path)
     local comming = require(_path)
     for k, v in pairs(comming) do
