@@ -1,3 +1,11 @@
+-- Machine Learning Online Class - Exercise 2: Logistic Regression
+--
+-- Instructions
+-- ------------
+--
+-- This file contains code that helps you get started on the logistic
+-- regression exercise. 
+
 package.path = package.path .. ";../?.lua"
 local misc = require"utils.misc"
 local loader = require"utils.loader"

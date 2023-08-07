@@ -1,3 +1,12 @@
+-- Machine Learning Online Class
+-- Exercise 1: Linear regression with multiple variables
+--
+-- Instructions
+-- ------------
+--
+-- This file contains code that helps you get started on the
+-- linear regression exercise. 
+
 package.path = package.path .. ";../?.lua"
 local misc = require"utils.misc"
 local loader = require"utils.loader"

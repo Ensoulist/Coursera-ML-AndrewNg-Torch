@@ -1,4 +1,5 @@
 local torch = require"torch"
+local matio = require"matio"
 
 local table_insert = table.insert
 local string_char = string.char
@@ -30,7 +31,8 @@ function loader.load_from_txt(_path)
     return torch.Tensor(all)
 end
 
-function loader.load_from_mat()
+function loader.load_from_mat(_file_name)
+    return matio.load(_file_name)
 end
 
 return loader

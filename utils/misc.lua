@@ -37,4 +37,12 @@ function misc.pause()
     io.stdin:read()
 end
 
+function misc.extend_method(_method, _path)
+    local comming = require(_path)
+    for k, v in pairs(comming) do
+        _method[k] = v
+    end
+    return _method
+end
+
 return misc
