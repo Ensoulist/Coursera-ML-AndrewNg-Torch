@@ -62,7 +62,7 @@ local J, grad = method.lr_cost_function(theta_t, X_t, y_t, lambda_t)
 misc.printf('\nCost: %f\n', J);
 misc.printf('Expected cost: 2.534819\n');
 misc.printf('Gradients:\n');
-print(grad);
+print(grad)
 misc.printf('Expected gradients:\n');
 misc.printf(' 0.146561\n -0.548558\n 0.724722\n 1.398003\n');
 

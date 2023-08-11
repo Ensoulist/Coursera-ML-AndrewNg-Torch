@@ -88,7 +88,6 @@ for i = 1, m, 1 do
     local num = pred[1][1]
     misc.printf('\nNeural Network Prediction: %d (digit %d)\n', num, num % 10);
 
-
     local s = misc.input('Paused - press enter to continue, q to exit:');
     if s == 'q' then
         break

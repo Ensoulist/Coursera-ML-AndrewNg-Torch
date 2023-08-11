@@ -3,6 +3,7 @@ local plot = require"gnuplot"
 local misc = require"utils.misc"
 local calc = require"utils.calc"
 local optim = require"optim"
+local nn = require"nn"
 
 local table_insert = table.insert
 local math_floor = math.floor
@@ -110,6 +111,31 @@ function method.predict(Theta1, Theta2, X)
 
     local _, rlt = torch.max(A3, 2)
     return rlt:double()
+
+    -- nn version
+    -- local l1_num = Theta1:size(2) - 1
+    -- local l2_num = Theta1:size(1) 
+    -- local out_num = Theta2:size(1)
+
+    -- local m = nn.Sequential()
+    -- local l2 = nn.Linear(l1_num, l2_num)
+    -- local param = l2:parameters()
+    -- param[1]:copy(Theta1:narrow(2, 2, l1_num))
+    -- param[2]:copy(Theta1[{{}, 1}])
+
+    -- local l3 = nn.Linear(l2_num, out_num)
+    -- param = l3:parameters()
+    -- param[1]:copy(Theta2:narrow(2, 2, l2_num))
+    -- param[2]:copy(Theta2[{{}, 1}])
+
+    -- m:add(l2)
+    -- m:add(nn.Sigmoid())
+    -- m:add(l3)
+    -- m:add(nn.Sigmoid())
+
+    -- local output = m:forward(X):double()
+    -- local _, rlt = torch.max(output, 2)
+    -- return rlt:double()
 end
 
 return method
