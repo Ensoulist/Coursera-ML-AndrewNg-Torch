@@ -151,9 +151,15 @@ function method.fmincg(cost_func, param, option, report_num)
         end
         total_num = total_num + this_iter
 
+        local opt = {}
+        for k, v in pairs(option) do
+            opt[k] = v
+        end
+        opt.maxIter = this_iter
+        opt.maxEval = math_floor(this_iter * 1.5)
+
         local costs
-        option.maxIter = this_iter
-        param, costs = optim.cg(cost_func, param, option)
+        param, costs = optim.cg(cost_func, param, opt)
         local cost = costs[#costs]
         misc.printf("Trained Iter: %s, cost: %s", total_num, cost)
     end
