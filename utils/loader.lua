@@ -35,4 +35,24 @@ function loader.load_from_mat(_file_name)
     return matio.load(_file_name)
 end
 
+function loader.data_to_svm(X, y)
+    local svm_data = {}
+    if X:dim() == 1 then
+        X = X:view(1, X:numel())
+    end
+    local n = X:size(2)
+    local idx_arr = {}
+    for i = 1, n, 1 do
+        table_insert(idx_arr, i)
+    end
+
+    local y_dim = y:dim()
+    for i = 1, X:size(1), 1 do
+        local lable = y_dim == 1 and y[i] or y[i][1]
+        local idxcs = torch.IntTensor(idx_arr)
+        table_insert(svm_data, {lable, {idxcs, X[i]:float()}})
+    end
+    return svm_data
+end
+
 return loader
