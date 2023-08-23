@@ -52,4 +52,13 @@ function misc.extend_method(_method, _path)
     return _method
 end
 
+function misc.table_check_key(_tbl, _key)
+    local val = _tbl[_key]
+    if not val then
+        val = {}
+        _tbl[_key] = val
+    end
+    return val
+end
+
 return misc
