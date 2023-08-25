@@ -7,6 +7,9 @@ local optim = require"optim"
 
 local method = {}
 
+misc.extend_method(method, "ex3-neural_network.method3")
+misc.extend_method(method, "ex5-bias_vs_variance.method5")
+
 function method.find_closest_centroids(X, centroids)
     local idx = {}
     local t_c 
@@ -105,6 +108,48 @@ function method.k_means_init_centroids(X, K)
         centroids[i] = X[idx[i]]
     end
     return centroids
+end
+
+function method.plot(plot_tbl, file_name, labels, axis, plot_method)
+    file_name = file_name or "plot.png"
+    plot.pngfigure(file_name)
+    local plot_method = plot_method or "plot"
+    plot[plot_method](plot_tbl)
+    if axis then
+        plot.axis(axis)
+    end
+    if labels then
+        plot.xlabel(labels[1])
+        plot.ylabel(labels[2])
+    end
+    plot.plotflush()
+    plot.close()
+    misc.printf("plot. see %s", file_name)
+end
+
+function method.pca(X)
+    local SGM = X:t() * X / X:size(1)
+    return torch.svd(SGM)
+end
+
+function method.draw_line(plot_tbl, pt1, pt2)
+    if pt1:dim() > 1 then
+        pt1 = pt1[1]
+    end
+    if pt2:dim() > 1 then
+        pt2 = pt2[1]
+    end
+    table.insert(plot_tbl, {"", torch.Tensor({pt1[1], pt2[1]}), 
+        torch.Tensor({pt1[2], pt2[2]}), "-"}) 
+    return plot_tbl
+end
+
+function method.project_data(X, U, K)
+    return X * U[{{}, {1, K}}]
+end
+
+function method.recover_data(X, U, K)
+    return X * U[{{}, {1, K}}]:t()
 end
 
 return method
