@@ -46,6 +46,16 @@ function method.compute_centroids(X, idx, K)
     return centroids
 end
 
+function method.compute_centroids2(X, idx, K)
+    local centroids = torch.zeros(K, X:size(2))
+    for i = 1, K, 1 do
+        local this_idx = torch.eq(idx, i)
+        local this_X = X:index(1, torch.nonzero(this_idx)[{{}, 1}])
+        centroids[i] = this_X:sum(1) / this_X:size(1)
+    end
+    return centroids
+end
+
 function method.run_k_means(X, initial_centroids, max_iters, plot_grogress)
     local centroids
     if type(initial_centroids) == "table" then
@@ -65,7 +75,7 @@ function method.run_k_means(X, initial_centroids, max_iters, plot_grogress)
     for i = 0, max_iters, 1 do
         if i > 0 then
             idx = method.find_closest_centroids(X, centroids)
-            centroids = method.compute_centroids(X, idx, k)
+            centroids = method.compute_centroids2(X, idx, k)
         end
         if history then
             for j = 1, k, 1 do

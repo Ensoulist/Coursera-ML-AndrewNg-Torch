@@ -65,7 +65,7 @@ misc.pause()
 misc.printf('\nComputing centroids means.\n\n');
 
 --  Compute means based on the closest centroids found in the previous part.
-local centroids = method.compute_centroids(X, idx, K)
+local centroids = method.compute_centroids2(X, idx, K)
 
 misc.printf('Centroids computed after initial finding of closest centroids: \n')
 misc.printf(tostring(centroids))
