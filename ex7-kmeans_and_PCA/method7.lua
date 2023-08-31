@@ -120,11 +120,11 @@ function method.k_means_init_centroids(X, K)
     return centroids
 end
 
-function method.plot(plot_tbl, file_name, labels, axis, plot_method)
+function method.plot(plot_tbl, file_name, labels, axis, plot_method, ...)
     file_name = file_name or "plot.png"
     plot.pngfigure(file_name)
     local plot_method = plot_method or "plot"
-    plot[plot_method](plot_tbl)
+    plot[plot_method](plot_tbl, ...)
     if axis then
         plot.axis(axis)
     end

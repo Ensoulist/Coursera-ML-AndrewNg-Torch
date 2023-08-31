@@ -84,12 +84,12 @@ function method.contour(data, x, y, z)
                 last_flag = nil
             else
                 if last_flag ~= nil then
-                    if val > 0 ~= last_flag then
+                    if val > z ~= last_flag then
                         table_insert(rlt_x, x[i])
                         table_insert(rlt_y, y[j])
                     end
                 end
-                last_flag = val > 0
+                last_flag = val > z
             end
         end
     end
@@ -104,12 +104,12 @@ function method.contour(data, x, y, z)
                 last_flag = nil
             else
                 if last_flag ~= nil then
-                    if val > 0 ~= last_flag then
+                    if val > z ~= last_flag then
                         table_insert(rlt_x, x[i])
                         table_insert(rlt_y, y[j])
                     end
                 end
-                last_flag = val > 0
+                last_flag = val > z
             end
         end
     end
